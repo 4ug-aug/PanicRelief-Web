@@ -1,9 +1,11 @@
-import { Flex, Text, Button, TextField, TextArea, Badge } from '@radix-ui/themes';
+import { Flex, Text, Button, TextField, Badge } from '@radix-ui/themes';
 import SevDropdown from './components/sevDropdown';
+import CoreDropdown from './components/coreServiceDropdown';
 import FileDrop from './components/dragUpload';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ImageWithSkeleton from './components/imageSkeleton';
+import ResizableTextArea from './components/textArea';
 
 
 const label_style = {
@@ -12,9 +14,9 @@ const label_style = {
 };
 
 const main_content = {
-    paddingTop: '5rem',
-    paddingRight: '5rem',
-    paddingLeft: '5rem',
+    paddingTop: '10rem',
+    paddingRight: '15rem',
+    paddingLeft: '15rem',
 };
 
 const sev_map: { [key: string]: string } = {
@@ -99,7 +101,7 @@ export default function Form() {
   return (
     // we place a settings button on the top right of the page
     // when clicked, it will open the settings page
-    <div>
+    <div> 
       <div>
         <Flex justify="end" style={{paddingRight: '5rem', paddingTop: '1rem'}}>
           <Button onClick={() => window.location.href = '/settings'} size="1" variant="soft" style={{cursor: 'pointer'}}>Settings</Button>
@@ -109,17 +111,17 @@ export default function Form() {
       <div style={{paddingBottom: '1rem', justifyContent: 'space-between', display: 'flex'}}>
       <div>
       <Text size="8" weight="bold" style={{paddingRight: '2rem'}}>
-        Panic Relief {severity && <Badge color={sev_map[severity] as "green" | "red" | "yellow"}>{sev_label[severity]}</Badge>}
+        Panic Relief {severity && <Badge color={sev_map[severity] as "green" | "red" | "yellow"}>{sev_label[severity]}</Badge>} {coreService && <Badge>{coreService}</Badge>}
       </Text>
 
-      <Flex direction='column'>
-      <Flex gap="1" style={{paddingTop: '1rem'}}>
-          <SevDropdown onValueChange={setSeverity} />
-      </Flex>
+      <Flex gap="2" direction='row'>
+        <div style={{paddingTop: '1rem'}}>
+            <SevDropdown onValueChange={setSeverity} />
+        </div>
 
-      <Flex gap="1" style={{paddingTop: '1rem'}}>
-          <SevDropdown onValueChange={setSeverity} />
-      </Flex>
+        <div style={{paddingTop: '1rem'}}>
+            <CoreDropdown onValueChange={setCoreService} />
+        </div>
       </Flex>
 
       </div>
@@ -151,7 +153,7 @@ export default function Form() {
       </div>
 
 
-      <Flex direction="column" gap="1" style={{paddingBottom: '1rem'}}>
+      {/* <Flex direction="column" gap="1" style={{paddingBottom: '1rem'}}>
         <Text style={label_style}>Core Service Affected</Text>
         <TextField.Root>
           <TextField.Input 
@@ -161,16 +163,18 @@ export default function Form() {
                 onChange={(e) => setCoreService(e.target.value)} 
                 />
         </TextField.Root>
-      </Flex>
+      </Flex> */}
 
       <Flex direction="column" gap="1" style={{paddingBottom: '1rem'}}>
         <Text style={label_style}>Description</Text>
-        <TextArea
-                id="description" 
-                value={description} 
-                placeholder='Description of panic attack...' 
-                onChange={(e) => setDescription(e.target.value)} 
-                />
+        <Flex direction="column" gap="1" style={{paddingBottom: '1rem'}}>
+          <ResizableTextArea
+            id="description" 
+            value={description} 
+            placeholder='Description of panic attack...' 
+            onChange={(e: any) => setDescription(e.target.value)} 
+          />
+        </Flex>
       </Flex>
         <Flex direction="column" gap="1">
           <Text style={label_style}>Images Uploaded {files.length > 0 && `(${files.length} files)`}</Text>
